@@ -1,6 +1,6 @@
 #tool nuget:?package=xunit.runner.console&version=2.2.0
 #tool nuget:?package=OpenCover&version=4.6.519
-#tool nuget:?package=GitVersion&version=3.6.5
+#tool nuget:?package=GitVersion.CommandLine&version=4.0.0
 
 #load build/paths.cake
 
