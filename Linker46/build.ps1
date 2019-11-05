@@ -44,7 +44,7 @@ http://cakebuild.net
 
 [CmdletBinding()]
 Param(
-    [string]$Script = ".\build.cake",
+    [string]$Script = "Linker46/build.cake",
     [string]$Target = "Build",
     [ValidateSet("Release", "Debug")]
     [string]$Configuration = "Release",
