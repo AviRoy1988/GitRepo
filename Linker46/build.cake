@@ -1,12 +1,13 @@
 #tool nuget:?package=xunit.runner.console&version=2.2.0
 #tool nuget:?package=OpenCover&version=4.6.519
-#tool nuget:?package=GitVersion.CommandLine&version=4.0.0
+//#tool nuget:?package=GitVersion.CommandLine&version=4.0.0
+#tool nuget:?package=GitVersion&version=3.6.5
 
 #load build/paths.cake
 
 var target = Argument("Target","Build");
 var configuration = Argument("Configuration","Release");
-var PackageVersionNumber = "0.1.0";
+var PackageVersionNumber = "1.0.0.0";
 var PackageOutputPath = Argument<DirectoryPath>("PackageOutputPath","packages");
 var Packagepath = File("Linker.zip").Path;
 
@@ -70,6 +71,27 @@ Task("Build")
                  CleanDirectory(PackageOutputPath);
                  
                 });
+
+
+Task("OctoPackPush")
+	.IsDependentOn("Test")
+	.IsDependentOn("Version")
+	.IsDependentOn("Remove-Packages")
+	.Does(() =>
+	{
+		//var APIKey = EnvironmentVariable("OctopusAPIKey") ?? throw new ArgumentNullException("OctopusAPIKey");
+		var APIKey = "API-9F0WCWKLED6VBRKKIJLZ8MUN0";
+		var msbuildSettings = new MSBuildSettings()
+									.WithTarget("build")
+									.SetConfiguration("Release")
+									.WithProperty("RunOctoPack", "true")
+									.WithProperty("OctoPackPackageVersion","1.0-Beta")
+									.WithProperty("OctoPackPublishPackageToHttp", "http://localhost/OctopusDeploy/nuget/packages")
+									.WithProperty("OctoPackPublishApiKey", APIKey);
+
+
+			MSBuild(Paths.SolutionFile, msbuildSettings);
+	});
 
                 Task("Package-Nuget")
                     .IsDependentOn("Test")

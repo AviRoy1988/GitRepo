@@ -55,6 +55,7 @@ Param(
     [switch]$Experimental = $true,
     [Alias("DryRun","Noop")]
     [switch]$WhatIf,
+	[switch]$DebugMode,
     [switch]$Mono,
     [switch]$SkipToolPackageRestore,
     [Parameter(Position=0,Mandatory=$false,ValueFromRemainingArguments=$true)]
@@ -121,6 +122,10 @@ if($Experimental.IsPresent -and !($Mono.IsPresent)) {
 $UseDryRun = "";
 if($WhatIf.IsPresent) {
     $UseDryRun = "-dryrun"
+}
+$UseDebugMode = "";
+if($DebugMode.IsPresent){
+	$UseDebugMode = "-debug"
 }
 
 # Make sure tools folder exists
@@ -230,5 +235,5 @@ if (!(Test-Path $CAKE_EXE)) {
 
 # Start Cake
 Write-Host "Running build script..."
-Invoke-Expression "& `"$CAKE_EXE`" `"$Script`" -target=`"$Target`" -configuration=`"$Configuration`" -verbosity=`"$Verbosity`" -deploymentUser=`"$DeploymentUser`" -deploymentPassword=`"$DeploymentPassword`" $UseMono $UseDryRun $UseExperimental $ScriptArgs"
+Invoke-Expression "& `"$CAKE_EXE`" `"$Script`" -target=`"$Target`" -configuration=`"$Configuration`" -verbosity=`"$Verbosity`" -deploymentUser=`"$DeploymentUser`" -deploymentPassword=`"$DeploymentPassword`" $UseMono $UseDryRun $UseDebugMode $UseExperimental $ScriptArgs"
 exit $LASTEXITCODE
